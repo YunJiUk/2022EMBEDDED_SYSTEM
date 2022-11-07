@@ -1,9 +1,9 @@
-final.elf : one.o two.o myProject.h
-	gcc one.o two.o myProject.h -o four.elf
+final.elf : 1.o 2.o myProject.h
+	gcc 1.o 2.o myProject.h -o four.elf
 
-one.o : one.c myProject.h
-	gcc one.c -c
+1.o : 1.c myProject.h
+	gcc 1.c -c
 
-two.o : two.c myProject.h
-	gcc two.c -c
+2.o : 2.c myProject.h
+	gcc 2.c -c
 
