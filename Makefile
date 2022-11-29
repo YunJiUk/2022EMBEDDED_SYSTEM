@@ -1,9 +1,11 @@
-all: fndtest2
+all: textlcdtest2
 
-fndtest2 : libMyPeri.a fndtest.c fnd.h
-	arm-linux-gnueabi-gcc fndtest.c -l MyPeri -L. -o fndtest2 -lpthread
-libMyPeri.a : button.o led.o buzzer.o fnd.o
-	arm-linux-gnueabi-ar rc libMyPeri.a led.o button.o buzzer.o fnd.o
+textlcdtest2 : libMyPeri.a textlcdtest.c lcdtext.h
+	arm-linux-gnueabi-gcc textlcdtest.c -l MyPeri -L. -o textlcdtest2 -lpthread
+libMyPeri.a : button.o led.o buzzer.o fnd.o lcdtext.o
+	arm-linux-gnueabi-ar rc libMyPeri.a led.o button.o buzzer.o fnd.o lcdtext.o
+lcdtext.o : lcdtext.h lcdtext.c
+	arm-linux-gnueabi-gcc -c lcdtext.c -o lcdtext.o
 fnd.o : fnd.h fnd.c
 	arm-linux-gnueabi-gcc -c fnd.c -o fnd.o
 buzzer.o : buzzer.h buzzer.c
