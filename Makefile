@@ -1,9 +1,15 @@
-all: colorledtest2
+all: alltest
 
-colorledtest2 : libMyPeri.a colorled.c colorled.h
-	arm-linux-gnueabi-gcc colorled.c -l MyPeri -L. -o colorledtest2 -lpthread
-libMyPeri.a : button.o led.o buzzer.o colorled.o
-	arm-linux-gnueabi-ar rc libMyPeri.a led.o button.o buzzer.o colorled.o
+alltest : libMyPeri.a alltest.c
+	arm-linux-gnueabi-gcc -l MyPeri -L. alltest.c -lpthread -o alltest
+libMyPeri.a : button.o led.o buzzer.o colorled.o fnd.o temperature.o lcdtext.o
+	arm-linux-gnueabi-ar rc libMyPeri.a led.o button.o buzzer.o colorled.o fnd.o temperature.o lcdtext.o
+temperature.o: temperature.h temperature.c
+	arm-linux-gnueabi-gcc -c temperature.c -o temperature.o
+lcdtext.o: lcdtext.h lcdtext.c
+	arm-linux-gnueabi-gcc -c lcdtext.c -o lcdtext.o
+fnd.o: fnd.h fnd.c
+	arm-linux-gnueabi-gcc -c fnd.c -o fnd.o
 colorled.o : colorled.h colorled.c
 	arm-linux-gnueabi-gcc -c colorled.c -o colorled.o
 buzzer.o : buzzer.h buzzer.c

@@ -52,10 +52,7 @@ int probeButtonPath(char *newPath){
 	
 	return returnValue;
 }
-
-
-
-void buttonThFunc(void)
+void* buttonThFunc(void *arg)
 {
 	
 	int readSize,inputIndex;
@@ -63,10 +60,14 @@ void buttonThFunc(void)
 	while(1)
 	{
 	readSize = read(fd, &stEvent , sizeof(stEvent));
+	
+	
 	if (readSize != sizeof(stEvent))
 	{
 	continue;
 	}
+	
+	MS.messageNum=1;
 	
 	MS.keyInput = stEvent.code;
 	MS.pressed = stEvent.value;
@@ -79,9 +80,10 @@ int buttonInit(void)
 {
 if (probeButtonPath(buttonPath) == 0)
 return 0;
-fd=open (buttonPath, O_RDONLY);
+fd=open (buttonPath, O_RDWR);
 msgID = msgget (MESSAGE_ID, IPC_CREAT|0666);
 pthread_create(&buttonTh_id, NULL, buttonThFunc, NULL);
+
 return 1;
 }
 
@@ -94,22 +96,4 @@ int buttonExit(void)
 	return 1;
 }
 
-int buttonRead(void)
 
-{
-    msgID = msgget (MESSAGE_ID, IPC_CREAT|0666);
-    msgrcv(msgID,&MSR, sizeof(int)*2 , 0,0);
-switch(MSR.keyInput)
-{
-case KEY_VOLUMEUP: printf("Volume up key):"); break;
-case KEY_HOME: printf("Home key):"); break;
-case KEY_SEARCH: printf("Search key):"); break;
-case KEY_BACK: printf("Back key):"); break;
-case KEY_MENU: printf("Menu key):"); break;
-case KEY_VOLUMEDOWN: printf("Volume down key):"); break;
-}
-if ( MSR.pressed ) printf("pressed\n");
-else printf("released\n");
-return 1;
-}
-//while(1){을 돌면서 / read(); / msgsnd(); }

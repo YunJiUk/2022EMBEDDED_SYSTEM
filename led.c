@@ -32,6 +32,11 @@ int ledOnOff (int ledNum, int onOff){
 int ledLibInit(void){
 
 	fd=open("/dev/periled", O_WRONLY);
+    if ( fd < 0 )
+    {
+    perror("driver (//dev//cnled) open error.\n");
+return 1;
+}
 	
 	ledValue = 0;
 }
@@ -45,14 +50,9 @@ int ledLibExit(void)
 
 int ledread(const char num[]){
 
-   fd=open("/dev/periled", O_WRONLY);
-if ( fd < 0 )
-{
-perror("driver (//dev//cnled) open error.\n");
-return 1;
-}
-	data = strtol(num,NULL,16);
-	printf("wrate data :0x%X\n", data);
+
+	data = strtol(num,NULL,2);
+	//printf("wrate data :0x%X\n", data);
 	write(fd,&data,4);
 }
 
