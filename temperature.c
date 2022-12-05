@@ -9,11 +9,12 @@
 #include <sys/ioctl.h>
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
+#include "temperature.h"
 
 
 
 
-double tempread(void){ 
+double tempread(){ 
 char gbuf[10];
 char *buffer; 
 
@@ -54,5 +55,6 @@ value |= (1<<i); //1로 비트를 채움
 double temp = (double)value*0.0625; 
 //1비트가 0.0625도
 printf("Current Temp: %lf \n", temp);
-return 1;
+
+return temp;
 }
