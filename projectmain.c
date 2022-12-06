@@ -14,6 +14,7 @@
 #include "lcdtext.h"
 #include "colorled.h"
 #include "temperature.h"
+#include "touch.h"
 #define INPUT_DEVICE_LIST "/dev/input/event"
 //실제 디바이스 드라이버 노드파일: 뒤에 숫자가 붙음., ex)/dev/input/event5
 #define PROBE_FILE "/proc/bus/input/devices"
@@ -29,8 +30,24 @@ pthread_t thread_fnd;
 pthread_t thread_temperature;
 pthread_t thread_buzzer;
 pthread_t thread_colorled;
-unsigned int friendship_exp=0;
+pthread_t thread_touch;
+pthread_t thread_game1;
+pthread_t thread_game2;
 
+unsigned int friendship_exp=0;
+void* game1Func(void *arg)
+{ 
+   
+    jpgPrint("dog1.jpg");
+    pthread_exit(0);
+}
+
+void* game2Func(void *arg)
+{ 
+    
+    jpgPrint("dog2.jpg");
+    pthread_exit(0);
+}
 void* buttonReadFunc(void *arg)
 {
     buttonInit();
@@ -41,12 +58,16 @@ while(1){
     if(MSR.keyInput){
     switch(MSR.keyInput)
     {
-        case KEY_VOLUMEUP: printf("Volume up key):"); break;
+        case KEY_VOLUMEUP:
+            pthread_create(&thread_game1, NULL, game1Func, NULL); 
+            break;
         case KEY_HOME: if ( MSR.pressed ) friendship_exp++; break;
         case KEY_SEARCH: printf("Search key):"); break;
         case KEY_BACK:  if ( MSR.pressed ) friendship_exp--; break;
         case KEY_MENU: printf("Menu key):"); break;
-        case KEY_VOLUMEDOWN: printf("Volume down key):"); break;
+        case KEY_VOLUMEDOWN: 
+            pthread_create(&thread_game2, NULL, game2Func, NULL); 
+            break;
     }
 
     if ( MSR.pressed ) printf("pressed\n");
@@ -121,23 +142,45 @@ pwmLedInit();
     
 }
 
+ void* touchFunc(void *arg)
+{   
+touchInit();
+     int msgID_t=msgget (MESSAGE_ID_T, IPC_CREAT|0666);
+     TOUCH_MSG_T MR_touch;
+    while(1){
+       msgrcv(msgID_t,&MR_touch,sizeof(int)*4 , 0,0);
+       
+       switch(MR_touch.keyInput){
+           case 999:
+            if(MR_touch.pressed==1){
+                if(MR_touch.x<500) friendship_exp=friendship_exp+5;
+                else if(MR_touch.x>500) friendship_exp=friendship_exp+2;
+            }
+       }
+    }
+    touchExit();
+    
+}
+
+
+
 
 
 
 int main(void){
 
     lcdtextwrite("1: increase", "2. decrease", 3);  
-
+    
     pthread_create(&buttonread, NULL, buttonReadFunc, NULL);
     pthread_create(&thread_led, NULL, ledFunc, NULL);
     pthread_create(&thread_fnd, NULL, fndFunc, NULL);
     pthread_create(&thread_temperature, NULL, temperatureFunc, NULL);
     pthread_create(&thread_buzzer, NULL, buzzerFunc, NULL);
-     pthread_create(&thread_colorled, NULL, colorledFunc, NULL);
+    pthread_create(&thread_colorled, NULL, colorledFunc, NULL);
+    pthread_create(&thread_touch, NULL, touchFunc, NULL);
    
+    jpgPrint("dog.jpg");
     
-
-
 
    pthread_join(buttonread, NULL);
    pthread_join(thread_led, NULL);
@@ -145,4 +188,5 @@ int main(void){
    pthread_join(thread_temperature, NULL);
    pthread_join(thread_buzzer, NULL);
    pthread_join(thread_colorled, NULL);
+   pthread_join(thread_touch,NULL);
 }

@@ -49,7 +49,7 @@ int probeButtonPath(char *newPath){
 	if (returnValue == 1){
 		sprintf (newPath,"%s%d",INPUT_DEVICE_LIST,number);
 	}
-	
+
 	return returnValue;
 }
 void* buttonThFunc(void *arg)
