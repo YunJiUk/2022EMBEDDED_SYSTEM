@@ -8,12 +8,14 @@
 #define GYROPATH "/sys/class/misc/FreescaleGyroscope/"
 int main (void)
 {
+
+Gyroinit();
 while(1){
 Accelerometer();
 Magnetometer();
 Gyroscope();
 sleep(1);
 }
-
+Gyroexit();
 return 0;
 }
