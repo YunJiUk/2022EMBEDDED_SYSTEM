@@ -10,64 +10,75 @@
 #include <sys/msg.h>
 #include "gyro.h"
 #include "../libfbdev/libfbdev.h"
-#include "../libbuzzer/libbuzzer.h"
+
 #include "../libjpeg/jpeglib.h"
+#include <dirent.h>
+#include "buzzer.h"
 
-	pthread_t musicThreadT;
-	pthread_t thread_gyro;
+pthread_t thread_gyro;
+pthread_t thread_buzzer;
 
-char musicNote1[2000]=
-" ^E ^E ^E ^C ^E ^G G ^C G E A B Bb A G ^E ^G ^A ^F ^G ^E ^C ^D B ^C G E A B Bb A G ^E ^G ^A ^F ^G ^E ^C ^D B"
-" ^G ^F# ^F ^D ^E G A ^C A ^C ^D ^G ^F# ^F ^D ^E *C *C *C ^G ^F# ^F ^D ^E G A ^C A ^C ^D ^D# ^D ^C"
-" ^C ^C ^C ^C ^D ^E ^C A G ^C ^C ^C ^C ^D ^E ^C ^C ^C ^C ^D ^E ^C A G ^E ^E ^E ^C ^E ^G G ^C G E"
-" A B Bb A G ^E ^G ^A ^F ^G ^E ^C ^D B ^C G E A B Bb A G ^E ^G ^A ^F ^G ^E ^C ^D B ^E-^C G G A ^F ^F A"
-" B ^A ^A ^A ^G ^F ^E ^C A G ^E-^C G G A ^F ^F A B ^F ^F ^F ^E ^D ^C G E C ^C G E A B A G# Bb G# G-F#-G ";
-//FROM https://noobnotes.net/super-mario-bros-theme-nintendo/?solfege=false&transpose=0
-char musicNote3[2000]=
-"C  E       G   B  ^C   B     A - G "
-" ^D          ^C    ^C     B     ^C   B  A-G "
-" F     A       ^C    ^D-^D#    ^D       ^C-A "
-" F - G# - ^C        ^D        ^D# - ^D     Bb-G#"
-" ^C    ^D     B    ^C    A     B   A-G#"
-" ^E             ^D      ^C      B      A-B   A-G#"
-" G           A      ^C      ^G     ^F"
-" ^E   ^D     ^C     A       G# - ^D    ^E   ^D-^C ";
-char musicNote2[2000]=
-" C   A   G    Bb      C  F  E  F"
-" C     A      G      Bb    C    F-E-F"
-" A   Bb    ^C    ^D     ^C - G     G  A  Bb-^C  A"
-" A      Bb     ^C      ^D     ^C - G    G-A  Bb  ^C   A"
-" ^C   ^D-^E   ^F   ^E-Bb"
-" Bb - ^C             ^D       ^E     ^D-^C-Bb    A   ^C"
-" ^C   ^D-^E   ^F   ^E-Bb"
-" Bb       ^C      ^D      ^E      ^D     ^C    Bb   A     ^C"
-" C       A      G       Bb      C   F  E   F"
-" C   A   G    Bb     C  F-E-F"
-" C     A     G      Bb-G     C-F-G-A"
-" A      Bb      ^C-^D-^C-G         G      A     Bb      ^C      A"
-" A  -  Bb         ^C           ^D         ^C - G       G     A-Bb-^C   A"
-" ^C   ^D-^E   ^F   ^E-Bb"
-" Bb - ^C             ^D       ^E     ^D-^C-Bb    A   ^C"
-" ^C   ^D-^E   ^F   ^E-Bb"
-" Bb       ^C      ^D      ^E      ^D     ^C    Bb   A     ^C"
-" C       A      G       Bb      C   F  E   F"
-" C       A      G       Bb      C   F  E   F"
-" C   F  E   F";
-
+int C=1, D=3, E=5, F=6, G=8, A=10, B= 11; //B=12;
+void *buzzerFunc()
+{   while(1){
+    buzzerInit();
+    buz(A);    usleep(250000);
+    buz2(C);     usleep(500000);
+    buz2(D);    usleep(250000);
+    buz2(C);    usleep(1000000);
+    buz(A);    usleep(375000);
+    buz2(C);    usleep(125000);    buzzerStopSong();   usleep(100);
+    buz2(C);    usleep(250000);    buzzerStopSong();    usleep(100);
+    buz2(C);    usleep(250000);    buz2(D);    usleep(250000);
+    buz2(C);    usleep(750000);
+    buz(A);    usleep(250000);
+    buz2(C);    usleep(500000);    buzzerStopSong();    usleep(100);
+    buz2(C);    usleep(250000);
+    buz2(D);    usleep(250000);
+    buz2(C);    usleep(250000);
+    buz(A);    usleep(250000);
+    buz(F);    usleep(250000);
+    buz(G);    usleep(1500000);
+    buz(B);    usleep(250000);    buzzerStopSong();    usleep(100);
+    buz(B);    usleep(250000);    buzzerStopSong();    usleep(100);
+    buz(B);    usleep(250000);
+    buz(A);    usleep(250000);
+    buz(G);    usleep(250000);
+    buz(A);    usleep(250000);
+    buz(B);    usleep(500000);    buzzerStopSong();    usleep(100);
+    buz(B);    usleep(250000);    buzzerStopSong();    usleep(100);
+    buz(B);    usleep(250000);    buzzerStopSong();    usleep(100);
+    buz(B);    usleep(250000);
+    buz(A);    usleep(250000);
+    buz(G);    usleep(250000);
+    buz(A);    usleep(250000);
+    buz(B);    usleep(500000);
+    buz(A);    usleep(250000);
+    buz2(C);    usleep(500000);
+    buz(B);    usleep(250000);
+    buz(A);    usleep(250000);
+    buz(G);    usleep(250000);
+    buz(F);    usleep(250000);
+    buz(E);    usleep(250000);
+    buz(F);    usleep(1500000);
+}   
+    buzzerStopSong();
+}
 int space = 2;
 
 void *gyroFunc(){
     Gyroinit();
     while(1){
-    int x = Gyroscope();
-    if(x < -300){
+    int x = Accelerometer();
+    printf("%d", x);
+    if(x > 4500){
         printf("down");
         space++;
         if(space>2){
 			space = 3;
 		}
     }
-    else if(x > 300){
+    else if(x < -1000){
         printf("up");
 		space--;
 		if(space<2){
@@ -79,61 +90,10 @@ void *gyroFunc(){
     Gyroexit();
 }
 
-
-void *musicFunc(void* arg)
-{
-	libBuzzerInit();
-	int i=0;
-	int thisScale = 0;
-	char *note = musicNote1;
-	char prevChar = 0;
-	while (1)
-	{
-		for (i=0;i<strlen(note);i++)
-		{
-			switch (note[i])
-			{
-				case ' ': case '-':	//Play scale and wait;
-				//printf ("ThisScale:%d\r\n",thisScale);
-				if ((prevChar!=' ') && (prevChar!= '-'))
-				{
-					setFrequency (thisScale);	
-					buzzerEnable (1);
-					usleep(250*1000);	//100ms;
-
-					buzzerEnable (0);
-					usleep(10*1000);	//100ms;
-					thisScale = 0;
-				}
-				break;
-				case '^': thisScale+=HC;	break;
-				case '*': thisScale+=HHC;	break;
-				case 'C': thisScale += C - C;	break;
-				case 'D': thisScale += D - C;	break;
-				case 'E': thisScale += E - C;	break;
-				case 'F': thisScale += F - C;	break;
-				case 'G': thisScale += G - C;	break;
-					
-				case 'A': thisScale += A - C;	break;
-				case 'B': thisScale += B - C;	break;
-					
-				case '#': thisScale++;	break;
-				case 'b': thisScale--;	break;
-			}
-			prevChar = note[i];
-		}
-		usleep(500*1000);
-		if (note == musicNote1)
-			note = musicNote2;
-		else if (note == musicNote2)
-			note = musicNote3;
-		else note = musicNote1;
-	}
-}
 int main (int argc, char **argv)
 {
-	pthread_create(&musicThreadT, NULL, musicFunc, NULL);
 	pthread_create(&thread_gyro, NULL, gyroFunc, NULL);
+    pthread_create(&thread_buzzer, NULL, buzzerFunc, NULL);
 
     int screen_width;
     int screen_height;
@@ -153,8 +113,8 @@ int main (int argc, char **argv)
 	space = 2;
 	int i=0;
 	printf("%d", space);
-	while (1)
-	for (i=0; i<=7;i++)
+	while (1){
+	for (i=0; i<=19;i++)
 	{
 		int space2 = space;
 		printf("%d", space);
@@ -193,7 +153,13 @@ int main (int argc, char **argv)
 		fb_write_reverse(data, cols,rows);
 		free(data);
 		sleep(1);
-
+		if((space2 == 1 && i == 7) || (space2 == 1 && i == 13) || (space2 == 2 && i == 10) || 
+		(space2 == 2 && i == 18) || (space2 == 3 && i == 8) || (space2 == 3 && i == 15))
+		{	printf("end.");
+			break;
+		}
+	}
+	sleep(4);
 	}
 	fb_close();
     return 0;

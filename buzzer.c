@@ -6,7 +6,7 @@
 #include <dirent.h>
 #include "buzzer.h"
 
-#define MAX_SCALE_STEP 8
+#define MAX_SCALE_STEP 12
 #define BUZZER_BASE_SYS_PATH "/sys/bus/platform/devices/"
 #define BUZZER_FILENAME "peribuzzer"
 #define BUZZER_ENABLE_NAME "enable"
@@ -14,7 +14,11 @@
 char gBuzzerBaseSysDir[128]; ///sys/bus/platform/devices/peribuzzer.XX 가 결정됨
 const int musicScale[MAX_SCALE_STEP] =
 {
-262, /*do*/ 294,330,349,392,440,494, /* si */ 523
+262, 278, 294,311, 330,349,370, 392,415,440,466, 494
+};
+const int musicScale2[MAX_SCALE_STEP] =
+{
+523,554,587,622,659,699,740,784,831,880,932,988
 };
 
 int fd1, fd2;
@@ -68,10 +72,15 @@ printf("find %s\n",gBuzzerBaseSysDir);
 return ifNotFound;
 }
 
-int buzzerPlaySong(int scale){
+int buz(int scale){
     setFrequency(musicScale[scale-1]);
     buzzerEnable(1);
 }
+int buz2(int scale){
+    setFrequency(musicScale2[scale-1]);
+    buzzerEnable(1);
+}
+
 
 int buzzerStopSong(void){
     buzzerEnable(0);
