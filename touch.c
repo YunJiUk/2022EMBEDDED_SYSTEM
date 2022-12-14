@@ -56,6 +56,7 @@ void* touchThFunc(void *arg)
 	int readSize,inputIndex;
 	int x=0;
 	int y=0;
+	
 	struct input_event stEvent;
 	while(1)
 	{
@@ -77,17 +78,17 @@ void* touchThFunc(void *arg)
 				//printf("touch Y: %d\r\n",stEvent.value);
 			}
 	}
-	else if((stEvent.type ==EV_KEY)&&(stEvent.code==BTN_TOUCH)){
+	else if((stEvent.type==EV_KEY)&&(stEvent.code==BTN_TOUCH)){
 		MS_touch.x=x;
 		MS_touch.y=y;
 
 		if(stEvent.value==0){
 			MS_touch.pressed=0;
-			printf("touch finished\n");
+			//printf("touch finished\n");
 		}
 		else if(stEvent.value==1){
 			MS_touch.pressed=1;
-			printf("touch started\n");
+			//printf("touch started\n");
 			}
 	}
 
@@ -96,7 +97,10 @@ void* touchThFunc(void *arg)
 	MS_touch.keyInput = 999;
 	MS_touch.pressed = stEvent.value;
 	
+	
 	msgsnd(msgID_t,&MS_touch, sizeof(int)*4 , 0);
+	
+	
 	
 	}
   
