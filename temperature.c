@@ -13,7 +13,6 @@
 
 
 
-
 double tempread(){ 
 char gbuf[10];
 char *buffer; 
@@ -31,7 +30,7 @@ if (ioctl(file, SPI_IOC_RD_LSB_FIRST, &lsb) < 0)
 { perror("SPI rd_lsb_fist"); return 0; }
 if (ioctl(file, SPI_IOC_RD_BITS_PER_WORD, &bits) < 0) 
 { perror("SPI bits_per_word"); return 0; }
-printf("%s: spi mode %d, %d bits %sper word, %d Hz max\n","/dev/spidev1.0", mode, bits, lsb ? "(lsb first) " : "", speed); 
+//printf("%s: spi mode %d, %d bits %sper word, %d Hz max\n","/dev/spidev1.0", mode, bits, lsb ? "(lsb first) " : "", speed); 
 
 int len;
 memset(gbuf, 0, sizeof( gbuf));
@@ -54,7 +53,7 @@ value |= (1<<i); //1로 비트를 채움
 //다 바꿈
 double temp = (double)value*0.0625; 
 //1비트가 0.0625도
-printf("Current Temp: %lf \n", temp);
+//printf("Current Temp: %lf \n", temp);
 
 return temp;
 }

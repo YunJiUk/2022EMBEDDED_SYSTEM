@@ -33,5 +33,5 @@ int AnimationPrint_walk();
 
 int AnimationExit(void);
 
-   
+	
 #endif

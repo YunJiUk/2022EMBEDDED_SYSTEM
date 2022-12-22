@@ -19,6 +19,7 @@ void *buzzerFunc() // 산책 게임중에 나오는 배경음악 쓰레드
 
 void gamewin() //게임 승리시 나오는 브금
 {
+int C=1, D1=3, D2 =4, E=5, F1=6, F2 = 7, G=8, A=10, B1= 11, B2=12;//도레미파솔라시도 숫자화
     buzzerInit();
     buz2(A);
     usleep(350000);
@@ -49,6 +50,7 @@ void gamewin() //게임 승리시 나오는 브금
 
 void gamelose()//게임 패배시 나오는 브금
 {
+int C=1, D1=3, D2 =4, E=5, F1=6, F2 = 7, G=8, A=10, B1= 11, B2=12;//도레미파솔라시도 숫자화
     buzzerInit();
     buz2(E);
     usleep(160000);

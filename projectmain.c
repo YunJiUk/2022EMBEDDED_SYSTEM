@@ -306,7 +306,7 @@ void* game2Func(void* arg)  //목욕게임을 실행시키는 함수
     if (bath_score < 10) friendship_exp -= 100;       //10점 미만 -> 호감도 감소
     else friendship_exp += 300;     //10점 이상 -> 호감도 증가
 
-    pthread_create(&thread_backtomain_TFT, NULL, back, NULL); / 다시 로비 화면으로
+    pthread_create(&thread_backtomain_TFT, NULL, back, NULL); // 다시 로비 화면으로
 
         bath_score = 0;   //점수 초기화
 }
@@ -582,4 +582,3 @@ int main(void){
   
     pthread_join(thread_maintain, NULL);   //main문은 종료하지 않고 대기
 }
-

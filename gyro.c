@@ -7,23 +7,23 @@
 #define MAGNEPATH "/sys/class/misc/FreescaleMagnetometer/"
 #define GYROPATH "/sys/class/misc/FreescaleGyroscope/"
 
-int fd = 0;
+int fd_g = 0;
 FILE *fp_Acc = NULL;
 FILE *fp_Mag = NULL;
 FILE *fp_Gyro = NULL;
 
 void Gyroinit(){
-fd = open(ACCELPATH "enable",O_WRONLY);
-dprintf (fd,"1");
-close(fd);
+int fd_a = open(ACCELPATH "enable",O_WRONLY);
+dprintf (fd_a,"1");
+close(fd_a);
 
-fd = open (MAGNEPATH "enable",O_WRONLY);
-dprintf (fd,"1");
-close(fd);
+int fd_m = open (MAGNEPATH "enable",O_WRONLY);
+dprintf (fd_m,"1");
+close(fd_m);
 
-fd = open (GYROPATH "enable",O_WRONLY);
-dprintf (fd,"1");
-close(fd);
+int fd_g = open (GYROPATH "enable",O_WRONLY);
+dprintf (fd_g,"1");
+close(fd_g);
 }
 
 int Accelerometer(){
@@ -54,15 +54,15 @@ return gyro[0];
 }
 
 void Gyroexit(){
-fd = open(ACCELPATH "enable",O_WRONLY);
-dprintf (fd,"0");
-close(fd);
+int fd_a = open(ACCELPATH "enable",O_WRONLY);
+dprintf (fd_a,"0");
+close(fd_a);
 
-fd = open (MAGNEPATH "enable",O_WRONLY);
-dprintf (fd,"0");
-close(fd);
+int fd_m = open (MAGNEPATH "enable",O_WRONLY);
+dprintf (fd_m,"0");
+close(fd_m);
 
-fd = open (GYROPATH "enable",O_WRONLY);
-dprintf (fd,"0");
-close(fd);
+int fd_g = open (GYROPATH "enable",O_WRONLY);
+dprintf (fd_g,"0");
+close(fd_g);
 }
