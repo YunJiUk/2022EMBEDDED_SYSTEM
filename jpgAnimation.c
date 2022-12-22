@@ -11,52 +11,10 @@
 #include "buzzer.h"
 
 pthread_t thread_buzzer; //buzzer thread 선언
-int C=1, D1=3, D2 =4, E=5, F1=6, F2 = 7, G=8, A=10, B1= 11, B2=12;//도레미파솔라시도 숫자화
+
 void *buzzerFunc() // 산책 게임중에 나오는 배경음악 쓰레드
 {   
-   while(1){
-    buzzerInit();
-    buz(A);    usleep(250000);
-    buz2(C);     usleep(500000);
-    buz2(D1);    usleep(250000);
-    buz2(C);    usleep(1000000);
-    buz(A);    usleep(375000);
-    buz2(C);    usleep(125000);    buzzerStopSong();   usleep(100);
-    buz2(C);    usleep(250000);    buzzerStopSong();    usleep(100);
-    buz2(C);    usleep(250000);    buz2(D1);    usleep(250000);
-    buz2(C);    usleep(750000);
-    buz(A);    usleep(250000);
-    buz2(C);    usleep(500000);    buzzerStopSong();    usleep(100);
-    buz2(C);    usleep(250000);
-    buz2(D1);    usleep(250000);
-    buz2(C);    usleep(250000);
-    buz(A);    usleep(250000);
-    buz(F1);    usleep(250000);
-    buz(G);    usleep(1500000);
-    buz(B1);    usleep(250000);    buzzerStopSong();    usleep(100);
-    buz(B1);    usleep(250000);    buzzerStopSong();    usleep(100);
-    buz(B1);    usleep(250000);
-    buz(A);    usleep(250000);
-    buz(G);    usleep(250000);
-    buz(A);    usleep(250000);
-    buz(B1);    usleep(500000);    buzzerStopSong();    usleep(100);
-    buz(B1);    usleep(250000);    buzzerStopSong();    usleep(100);
-    buz(B1);    usleep(250000);    buzzerStopSong();    usleep(100);
-    buz(B1);    usleep(250000);
-    buz(A);    usleep(250000);
-    buz(G);    usleep(250000);
-    buz(A);    usleep(250000);
-    buz(B1);    usleep(500000);
-    buz(A);    usleep(250000);
-    buz2(C);    usleep(500000);
-    buz(B1);    usleep(250000);
-    buz(A);    usleep(250000);
-    buz(G);    usleep(250000);
-    buz(F1);    usleep(250000);
-    buz(E);    usleep(250000);
-    buz(F1);    usleep(1500000);
-}   
-    buzzerStopSong();
+   game1bgm();
 }
 
 void gamewin() //게임 승리시 나오는 브금
